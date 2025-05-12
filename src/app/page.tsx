@@ -135,41 +135,28 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <header>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center">
+      <header className="w-full">
         <Image
-          src="/logo2.gif"
+          src="/logo2.png"
           alt="デイサーチのロゴ"
           width={192}
           height={60}
-          className="mx-auto mt-8 mb-4 w-48 h-auto"
+          className="w-48 mx-auto mt-6 h-auto"
           priority
         />
       </header>
-      <main className="max-w-screen-md mx-auto p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+      <main className="w-full max-w-md mx-auto flex-1 flex flex-col items-center p-4">
+        <h1 className="text-2xl font-bold text-center mt-4 mb-2 text-gray-800">
           放課後等デイサービス検索
         </h1>
-        
-        {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600 text-center">{error}</p>
-          </div>
-        )}
-
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
-          <div className="max-w-md w-full my-4 mx-auto space-y-4">
+        <div className="rounded-lg shadow p-4 bg-white w-full mb-4">
+          <div className="space-y-4">
             <div>
-              <label 
-                htmlFor="prefecture" 
-                className="block text-sm font-medium text-gray-700 mb-2"
-                id="prefecture-label"
-              >
-                都道府県
-              </label>
+              <label htmlFor="prefecture" className="block text-sm font-medium text-gray-700 mb-1">都道府県</label>
               <select
                 id="prefecture"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={selectedPrefecture}
                 onChange={handlePrefectureChange}
                 aria-labelledby="prefecture-label"
@@ -182,22 +169,12 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <p id="prefecture-description" className="sr-only">
-                都道府県を選択してください
-              </p>
             </div>
-
             <div>
-              <label 
-                htmlFor="city" 
-                className="block text-sm font-medium text-gray-700 mb-2"
-                id="city-label"
-              >
-                市区町村
-              </label>
+              <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">市区町村</label>
               <select
                 id="city"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 value={selectedCity}
                 onChange={handleCityChange}
                 disabled={!selectedPrefecture}
@@ -211,56 +188,62 @@ export default function Home() {
                   </option>
                 ))}
               </select>
-              <p id="city-description" className="sr-only">
-                市区町村を選択してください
-              </p>
             </div>
           </div>
         </div>
-
-        {filteredFacilities.length === 0 && !error && (
-          <div className="text-center text-gray-500 py-8">
-            条件に一致する施設が見つかりませんでした。
-          </div>
-        )}
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {filteredFacilities.map((facility) => (
-            <div
-              key={facility.id}
-              className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow border-b border-gray-200"
-            >
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">{facility.name}</h2>
-              <div className="space-y-2 text-gray-600">
-                <p className="flex items-start">
-                  <span className="inline-block w-16 text-gray-500">住所：</span>
-                  <span>{facility.address}</span>
-                </p>
-                <p className="flex items-center">
-                  <span className="inline-block w-16 text-gray-500">電話：</span>
-                  <a
-                    href={`tel:${facility.tel}`}
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
-                    aria-label={`${facility.name}に電話する`}
-                  >
-                    {facility.tel}
-                  </a>
-                </p>
-                <p className="flex items-center">
-                  <span className="inline-block w-16 text-gray-500">Web：</span>
-                  <a
-                    href={facility.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-800 hover:underline"
-                    aria-label={`${facility.name}のWebサイトを新しいタブで開く`}
-                  >
-                    Webサイト
-                  </a>
-                </p>
-              </div>
+        <p className="text-sm text-gray-600 leading-relaxed mt-4 px-4 text-center">
+          放課後等デイサービスは、発達に特性のある子どもたちを対象に、放課後や休日に療育や支援を行う福祉サービスです。<br />
+          デイサーチでは、全国の事業所情報を地域・ニーズ別に検索できます。
+        </p>
+        <div className="w-full">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <p className="text-red-600 text-center text-sm">{error}</p>
             </div>
-          ))}
+          )}
+          {filteredFacilities.length === 0 && !error && (
+            <div className="text-center text-gray-500 py-8 text-sm">
+              条件に一致する施設が見つかりませんでした。
+            </div>
+          )}
+          <div className="grid grid-cols-1 gap-4">
+            {filteredFacilities.map((facility) => (
+              <div
+                key={facility.id}
+                className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow border-b border-gray-200"
+              >
+                <h2 className="text-base font-semibold text-gray-800 mb-2">{facility.name}</h2>
+                <div className="space-y-1 text-gray-600 text-sm">
+                  <p className="flex items-start">
+                    <span className="inline-block w-14 text-gray-500">住所：</span>
+                    <span>{facility.address}</span>
+                  </p>
+                  <p className="flex items-center">
+                    <span className="inline-block w-14 text-gray-500">電話：</span>
+                    <a
+                      href={`tel:${facility.tel}`}
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                      aria-label={`${facility.name}に電話する`}
+                    >
+                      {facility.tel}
+                    </a>
+                  </p>
+                  <p className="flex items-center">
+                    <span className="inline-block w-14 text-gray-500">Web：</span>
+                    <a
+                      href={facility.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 hover:underline"
+                      aria-label={`${facility.name}のWebサイトを新しいタブで開く`}
+                    >
+                      Webサイト
+                    </a>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     </div>
