@@ -1,103 +1,272 @@
-import Image from "next/image";
+'use client';
+
+import { useState, useMemo } from 'react';
+import Image from 'next/image';
+
+// 型定義
+type Prefecture = {
+  id: number;
+  name: string;
+};
+
+type City = {
+  id: number;
+  name: string;
+};
+
+type Facility = {
+  id: number;
+  name: string;
+  address: string;
+  tel: string;
+  website: string;
+  prefectureId: number;
+  cityId: number;
+};
+
+type CitiesMap = {
+  [key: number]: City[];
+};
+
+// 仮データ
+const prefectures: Prefecture[] = [
+  { id: 1, name: '東京都' },
+  { id: 2, name: '神奈川県' },
+  { id: 3, name: '千葉県' },
+];
+
+const cities: CitiesMap = {
+  1: [
+    { id: 1, name: '渋谷区' },
+    { id: 2, name: '新宿区' },
+    { id: 3, name: '港区' },
+  ],
+  2: [
+    { id: 1, name: '横浜市' },
+    { id: 2, name: '川崎市' },
+    { id: 3, name: '相模原市' },
+  ],
+  3: [
+    { id: 1, name: '千葉市' },
+    { id: 2, name: '船橋市' },
+    { id: 3, name: '松戸市' },
+  ],
+};
+
+const facilities: Facility[] = [
+  {
+    id: 1,
+    name: '渋谷区立文化総合センター',
+    address: '東京都渋谷区渋谷2-24-12',
+    tel: '03-3463-0211',
+    website: 'https://example.com/shibuya',
+    prefectureId: 1,
+    cityId: 1,
+  },
+  {
+    id: 2,
+    name: '新宿区立スポーツセンター',
+    address: '東京都新宿区西新宿2-11-4',
+    tel: '03-3342-1111',
+    website: 'https://example.com/shinjuku',
+    prefectureId: 1,
+    cityId: 2,
+  },
+  {
+    id: 3,
+    name: '横浜市文化体育館',
+    address: '神奈川県横浜市中区山下町1-1',
+    tel: '045-671-1111',
+    website: 'https://example.com/yokohama',
+    prefectureId: 2,
+    cityId: 1,
+  },
+];
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [selectedPrefecture, setSelectedPrefecture] = useState<number | ''>('');
+  const [selectedCity, setSelectedCity] = useState<number | ''>('');
+  const [error, setError] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const filteredFacilities = useMemo(() => {
+    try {
+      return facilities.filter((facility) => {
+        if (selectedPrefecture && selectedCity) {
+          return facility.prefectureId === selectedPrefecture && facility.cityId === selectedCity;
+        }
+        if (selectedPrefecture) {
+          return facility.prefectureId === selectedPrefecture;
+        }
+        return true;
+      });
+    } catch (err) {
+      setError('施設情報の取得中にエラーが発生しました。');
+      return [];
+    }
+  }, [selectedPrefecture, selectedCity]);
+
+  const availableCities = useMemo(() => {
+    try {
+      if (!selectedPrefecture) return [];
+      return cities[selectedPrefecture] || [];
+    } catch (err) {
+      setError('市区町村情報の取得中にエラーが発生しました。');
+      return [];
+    }
+  }, [selectedPrefecture]);
+
+  const handlePrefectureChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    try {
+      setError(null);
+      setSelectedPrefecture(e.target.value ? Number(e.target.value) : '');
+      setSelectedCity('');
+    } catch (err) {
+      setError('都道府県の選択中にエラーが発生しました。');
+    }
+  };
+
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    try {
+      setError(null);
+      setSelectedCity(e.target.value ? Number(e.target.value) : '');
+    } catch (err) {
+      setError('市区町村の選択中にエラーが発生しました。');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white">
+      <header className="bg-white shadow-sm">
+        <div className="max-w-screen-md mx-auto p-6">
+          <Image
+            src="/logo.png"
+            alt="DaySearch"
+            width={300}
+            height={75}
+            priority
+            className="h-16 w-auto object-contain mx-auto"
+            quality={100}
+          />
+        </div>
+      </header>
+
+      <main className="max-w-screen-md mx-auto p-6">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+          放課後等デイサービス検索
+        </h1>
+        
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-red-600 text-center">{error}</p>
+          </div>
+        )}
+
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+          <div className="max-w-md w-full my-4 mx-auto space-y-4">
+            <div>
+              <label 
+                htmlFor="prefecture" 
+                className="block text-sm font-medium text-gray-700 mb-2"
+                id="prefecture-label"
+              >
+                都道府県
+              </label>
+              <select
+                id="prefecture"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={selectedPrefecture}
+                onChange={handlePrefectureChange}
+                aria-labelledby="prefecture-label"
+                aria-describedby="prefecture-description"
+              >
+                <option value="">選択してください</option>
+                {prefectures.map((prefecture) => (
+                  <option key={prefecture.id} value={prefecture.id}>
+                    {prefecture.name}
+                  </option>
+                ))}
+              </select>
+              <p id="prefecture-description" className="sr-only">
+                都道府県を選択してください
+              </p>
+            </div>
+
+            <div>
+              <label 
+                htmlFor="city" 
+                className="block text-sm font-medium text-gray-700 mb-2"
+                id="city-label"
+              >
+                市区町村
+              </label>
+              <select
+                id="city"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                value={selectedCity}
+                onChange={handleCityChange}
+                disabled={!selectedPrefecture}
+                aria-labelledby="city-label"
+                aria-describedby="city-description"
+              >
+                <option value="">選択してください</option>
+                {availableCities.map((city) => (
+                  <option key={city.id} value={city.id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+              <p id="city-description" className="sr-only">
+                市区町村を選択してください
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {filteredFacilities.length === 0 && !error && (
+          <div className="text-center text-gray-500 py-8">
+            条件に一致する施設が見つかりませんでした。
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {filteredFacilities.map((facility) => (
+            <div
+              key={facility.id}
+              className="bg-white rounded-lg shadow-sm p-6 hover:shadow-md transition-shadow border-b border-gray-200"
+            >
+              <h2 className="text-xl font-semibold text-gray-800 mb-3">{facility.name}</h2>
+              <div className="space-y-2 text-gray-600">
+                <p className="flex items-start">
+                  <span className="inline-block w-16 text-gray-500">住所：</span>
+                  <span>{facility.address}</span>
+                </p>
+                <p className="flex items-center">
+                  <span className="inline-block w-16 text-gray-500">電話：</span>
+                  <a
+                    href={`tel:${facility.tel}`}
+                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                    aria-label={`${facility.name}に電話する`}
+                  >
+                    {facility.tel}
+                  </a>
+                </p>
+                <p className="flex items-center">
+                  <span className="inline-block w-16 text-gray-500">Web：</span>
+                  <a
+                    href={facility.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 hover:underline"
+                    aria-label={`${facility.name}のWebサイトを新しいタブで開く`}
+                  >
+                    Webサイト
+                  </a>
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
