@@ -138,7 +138,7 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <header>
         <Image
-          src="/logo2.png"
+          src="/logo2.gif"
           alt="デイサーチのロゴ"
           width={192}
           height={60}
