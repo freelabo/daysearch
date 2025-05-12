@@ -136,17 +136,15 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="pt-8 pb-4">
-        <div className="flex justify-center items-center">
-          <Image
-            src="/logo.png"
-            alt="デイサーチのロゴ"
-            width={400}
-            height={120}
-            className="mx-auto w-full max-w-xs md:max-w-md h-auto"
-            priority
-          />
-        </div>
+      <header>
+        <Image
+          src="/logo2.png"
+          alt="デイサーチのロゴ"
+          width={192}
+          height={60}
+          className="mx-auto mt-8 mb-4 w-48 h-auto"
+          priority
+        />
       </header>
       <main className="max-w-screen-md mx-auto p-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
