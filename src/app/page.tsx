@@ -136,20 +136,18 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-screen-md mx-auto p-6">
+      <header className="pt-8 pb-4">
+        <div className="flex justify-center items-center">
           <Image
             src="/logo.png"
-            alt="DaySearch"
-            width={300}
-            height={75}
+            alt="デイサーチのロゴ"
+            width={400}
+            height={120}
+            className="mx-auto w-full max-w-xs md:max-w-md h-auto"
             priority
-            className="h-16 w-auto object-contain mx-auto"
-            quality={100}
           />
         </div>
       </header>
-
       <main className="max-w-screen-md mx-auto p-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
           放課後等デイサービス検索
