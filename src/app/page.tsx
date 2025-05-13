@@ -195,48 +195,6 @@ export default function Home() {
           放課後等デイサービスは、発達に特性のある子どもたちを対象に、放課後や休日に療育や支援を行う福祉サービスです。<br />
           デイサーチでは、全国の事業所情報を地域・ニーズ別に検索できます。
         </p>
-        export default function Home() {
-  return (
-    <div className="min-h-screen bg-white">
-      <header className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Image
-          src="/logo2.gif"
-          alt="デイサーチのロゴ"
-          width={192}
-          height={48}
-        />
-      </header>
-      <div className="px-4 mt-4">
-        <p className="text-sm text-gray-600 leading-relaxed mt-4 px-4 text-center">
-          放課後等デイサービスは、発達に特性のある子どもたちを対象に、放課後や休日に療育や支援を行う福祉サービスです。<br />
-          デイサーチでは、全国の事業所情報を地域・ニーズ別に検索できます。
-        </p>
-
-        <div className="w-full max-w-screen-md mx-auto mt-6">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <article key={i} className="border rounded p-4 shadow-md mb-4 bg-white">
-              <h2 className="text-lg font-semibold text-blue-700">施設名 {i + 1}</h2>
-              <p className="text-sm text-gray-600">所在地：東京都サンプル区サンプル町{i + 1}-1</p>
-              <p className="text-sm text-gray-600">提供サービス：個別療育・集団活動</p>
-              <p className="text-sm text-gray-600">対象児童：発達障害・知的障害</p>
-              <p className="text-sm text-gray-600">対応時間：平日14時〜18時</p>
-              <p className="text-sm text-gray-600">料金：月額2,000円〜（世帯所得に応じて変動）</p>
-              <a
-                href={`https://example.com/facility-${i + 1}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 underline"
-              >
-                詳細を見る
-              </a>
-            </article>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
         <div className="w-full">
           {error && (
             <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
