@@ -216,56 +216,6 @@ export default function Home() {
     </article>
   ))}
 </div>
-        <div className="w-full">
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <p className="text-red-600 text-center text-sm">{error}</p>
-            </div>
-          )}
-          {filteredFacilities.length === 0 && !error && (
-            <div className="text-center text-gray-500 py-8 text-sm">
-              条件に一致する施設が見つかりませんでした。
-            </div>
-          )}
-          <div className="grid grid-cols-1 gap-4">
-            {filteredFacilities.map((facility) => (
-              <div
-                key={facility.id}
-                className="bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow border-b border-gray-200"
-              >
-                <h2 className="text-base font-semibold text-gray-800 mb-2">{facility.name}</h2>
-                <div className="space-y-1 text-gray-600 text-sm">
-                  <p className="flex items-start">
-                    <span className="inline-block w-14 text-gray-500">住所：</span>
-                    <span>{facility.address}</span>
-                  </p>
-                  <p className="flex items-center">
-                    <span className="inline-block w-14 text-gray-500">電話：</span>
-                    <a
-                      href={`tel:${facility.tel}`}
-                      className="text-blue-600 hover:text-blue-800 hover:underline"
-                      aria-label={`${facility.name}に電話する`}
-                    >
-                      {facility.tel}
-                    </a>
-                  </p>
-                  <p className="flex items-center">
-                    <span className="inline-block w-14 text-gray-500">Web：</span>
-                    <a
-                      href={facility.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 hover:underline"
-                      aria-label={`${facility.name}のWebサイトを新しいタブで開く`}
-                    >
-                      Webサイト
-                    </a>
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
       </main>
     </div>
   );
