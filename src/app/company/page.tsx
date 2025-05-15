@@ -9,9 +9,8 @@ export default function CompanyPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="flex items-center gap-4 max-w-3xl mx-auto px-4 pt-8 pb-2">
-        <a href="/" className="flex items-center gap-2">
+        <a href="/" className="flex items-center">
           <img src="/logo2.png" alt="デイサーチロゴ" className="h-10 w-auto" />
-          <span className="text-xl font-bold text-gray-800">デイサーチ</span>
         </a>
       </div>
       <main className="max-w-3xl mx-auto px-4 py-8">
