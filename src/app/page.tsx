@@ -63,7 +63,7 @@ export default function Home() {
                     </a>
                   </div>
                 </div>
-                <div className="vertical-divider" />
+                <div className="vertical-divider" style={{ minHeight: 120 }} />
                 <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:justify-end md:max-w-xs md:basis-[38.2%]">
                   {[
                     '通所介護・デイサービス',
