@@ -24,7 +24,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-center mt-4 mb-2 text-gray-800">
           放課後等デイサービス検索
         </h1>
-        <p className="text-sm text-gray-600 leading-relaxed mt-4 px-4 text-center">
+        <p className="text-sm text-gray-600 leading-relaxed mt-4 px-4 text-left">
           放課後等デイサービスは、発達に特性のある子どもたちを対象に、放課後や休日に療育や支援を行う福祉サービスです。<br />
           デイサーチでは、全国の事業所情報を地域・ニーズ別に検索できます。
         </p>
