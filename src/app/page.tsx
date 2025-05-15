@@ -48,6 +48,19 @@ export default function Home() {
             </article>
           ))}
         </div>
+        <nav className="w-full max-w-screen-md mx-auto mt-8">
+          <ul className="flex flex-col items-center gap-2">
+            <li>
+              <a href="https://www.daysearch.jp/company" className="text-blue-600 underline">運営会社</a>
+            </li>
+            <li>
+              <a href="https://www.daysearch.jp/terms" className="text-blue-600 underline" rel="nofollow">利用規約</a>
+            </li>
+            <li>
+              <a href="https://www.daysearch.jp/privacy" className="text-blue-600 underline" rel="nofollow">プライバシーポリシー</a>
+            </li>
+          </ul>
+        </nav>
       </main>
     </div>
   );
