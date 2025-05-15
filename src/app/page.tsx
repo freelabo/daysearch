@@ -20,7 +20,7 @@ export default function Home() {
           priority
         />
       </header>
-      <main className="w-full max-w-md mx-auto flex-1 flex flex-col items-center p-4">
+      <main className="w-full max-w-3xl md:max-w-[1200px] mx-auto flex-1 flex flex-col items-center p-4">
         <h1 className="text-2xl font-bold text-center mt-4 mb-2 text-gray-800">
           放課後等デイサービス検索
         </h1>
