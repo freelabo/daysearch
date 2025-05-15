@@ -63,7 +63,8 @@ export default function Home() {
                     </a>
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:ml-4 md:justify-end md:max-w-xs">
+                <div className="hidden md:block w-px bg-gray-200 mx-4" style={{ minHeight: 120 }} />
+                <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:justify-end md:max-w-xs">
                   {[
                     '通所介護・デイサービス',
                     '未経験可',
