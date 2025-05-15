@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
   title: '企業情報｜デイサーチ',
@@ -48,6 +49,7 @@ export default function CompanyPage() {
           </p>
         </article>
       </main>
+      <Footer />
     </div>
   );
 } 
