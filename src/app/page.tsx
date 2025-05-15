@@ -32,7 +32,7 @@ export default function Home() {
           {Array.from({ length: 20 }).map((_, i) => (
             <article key={i} className="border rounded p-4 shadow-md mb-4 bg-white">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 md:basis-[61.8%]">
                   <h2 className="text-lg font-semibold text-blue-600">
                     <a
                       href={`https://example.com/facility-${i + 1}`}
@@ -63,8 +63,8 @@ export default function Home() {
                     </a>
                   </div>
                 </div>
-                <div className="hidden md:block w-px bg-gray-200 mx-4" style={{ minHeight: 120 }} />
-                <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:justify-end md:max-w-xs">
+                <div className="vertical-divider" />
+                <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:justify-end md:max-w-xs md:basis-[38.2%]">
                   {[
                     '通所介護・デイサービス',
                     '未経験可',
