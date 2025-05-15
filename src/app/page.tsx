@@ -60,6 +60,23 @@ export default function Home() {
                   公式ホームページ
                 </a>
               </div>
+              <div className="flex flex-wrap gap-2 justify-end mt-4">
+                {[
+                  '通所介護・デイサービス',
+                  '未経験可',
+                  '社会保険完備',
+                  '車通勤可',
+                  'ボーナス・賞与あり',
+                  '交通費支給',
+                ].map((label) => (
+                  <span
+                    key={label}
+                    className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
             </article>
           ))}
         </div>
