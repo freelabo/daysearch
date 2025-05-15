@@ -28,7 +28,7 @@ export default function Home() {
           放課後等デイサービスは、発達に特性のある子どもたちを対象に、放課後や休日に療育や支援を行う福祉サービスです。<br />
           デイサーチでは、全国の事業所情報を地域・ニーズ別に検索できます。
         </p>
-        <div className="w-full mt-6 md:border-x md:border-gray-200">
+        <div className="w-full max-w-screen-md mx-auto mt-6">
           {Array.from({ length: 20 }).map((_, i) => (
             <article key={i} className="border rounded p-4 shadow-md mb-4 bg-white">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between">
