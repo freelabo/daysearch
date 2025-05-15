@@ -8,6 +8,12 @@ export const metadata: Metadata = {
 export default function CompanyPage() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <div className="flex items-center gap-4 max-w-3xl mx-auto px-4 pt-8 pb-2">
+        <a href="/" className="flex items-center gap-2">
+          <img src="/logo-daysearch.svg" alt="デイサーチロゴ" className="h-10 w-auto" />
+          <span className="text-xl font-bold text-gray-800">デイサーチ</span>
+        </a>
+      </div>
       <main className="max-w-3xl mx-auto px-4 py-8">
         <article className="bg-white rounded-lg shadow-sm p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">企業情報</h1>
