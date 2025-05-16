@@ -14,6 +14,13 @@ export default function TermsPage() {
         </a>
       </div>
       <main className="max-w-3xl mx-auto px-4 py-8">
+        <nav className="text-sm mb-4" aria-label="パンくずリスト">
+          <ol className="list-reset flex text-gray-600">
+            <li><a href="/" className="hover:underline text-blue-600">ホーム</a></li>
+            <li className="mx-2">/</li>
+            <li>利用規約</li>
+          </ol>
+        </nav>
         <article className="bg-white rounded-lg shadow-sm p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">利用規約</h1>
           <p className="text-gray-600 leading-relaxed mb-8">
