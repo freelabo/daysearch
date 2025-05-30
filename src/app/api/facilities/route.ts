@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { searchFacilities } from '@/lib/elasticsearch';
 
+// Node.jsランタイムを強制
 export const runtime = 'nodejs';
+// 動的レンダリングを強制
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
@@ -10,7 +12,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const query = Object.fromEntries(searchParams.entries());
 
-    // 検索実行
+    // 検索実行（Node.js環境でのみ実行）
     const { results, total } = await searchFacilities(query);
 
     return NextResponse.json({ results, total });
