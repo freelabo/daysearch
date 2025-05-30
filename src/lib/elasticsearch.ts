@@ -1,18 +1,9 @@
-import { Client } from '@elastic/elasticsearch';
 import type { SearchResult as ElasticSearchResult, SearchQuery as ElasticSearchQuery } from '@/types/elasticsearch';
 
 // Node.js環境でのみElasticsearchクライアントを初期化
-let client: Client | null = null;
-
-if (typeof window === 'undefined') {
-  client = new Client({
-    node: process.env.ELASTICSEARCH_URL || 'http://localhost:9200',
-    auth: {
-      username: process.env.ELASTICSEARCH_USERNAME || 'elastic',
-      password: process.env.ELASTICSEARCH_PASSWORD || 'changeme'
-    }
-  });
-}
+const ELASTICSEARCH_URL = process.env.ELASTICSEARCH_URL || 'http://localhost:9200';
+const ELASTICSEARCH_USERNAME = process.env.ELASTICSEARCH_USERNAME || 'elastic';
+const ELASTICSEARCH_PASSWORD = process.env.ELASTICSEARCH_PASSWORD || 'changeme';
 
 // 検索結果の型定義
 export interface SearchResult {
@@ -119,15 +110,27 @@ function buildSearchQuery(query: SearchQuery) {
 
 // 施設の検索
 export async function searchFacilities(query: SearchQuery) {
-  if (!client) {
-    throw new Error('Elasticsearch client is not initialized');
+  if (typeof window !== 'undefined') {
+    throw new Error('Elasticsearch search is only available on the server side');
   }
 
   try {
     const searchQuery = buildSearchQuery(query);
-    const response = await client.search(searchQuery);
+    const response = await fetch(`${ELASTICSEARCH_URL}/facilities/_search`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${Buffer.from(`${ELASTICSEARCH_USERNAME}:${ELASTICSEARCH_PASSWORD}`).toString('base64')}`
+      },
+      body: JSON.stringify(searchQuery)
+    });
 
-    const results = response.hits.hits.map(hit => ({
+    if (!response.ok) {
+      throw new Error(`Elasticsearch request failed: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const results = data.hits.hits.map((hit: any) => ({
       id: hit._id,
       score: hit._score || 0,
       ...(hit._source as Omit<SearchResult, 'id' | 'score'>)
@@ -135,14 +138,12 @@ export async function searchFacilities(query: SearchQuery) {
 
     return {
       results,
-      total: typeof response.hits.total === 'number' 
-        ? response.hits.total 
-        : response.hits.total?.value || 0
+      total: typeof data.hits.total === 'number' 
+        ? data.hits.total 
+        : data.hits.total?.value || 0
     };
   } catch (error) {
     console.error('Elasticsearch search error:', error);
     throw new Error('施設の検索中にエラーが発生しました。');
   }
-}
-
-export default client; 
+} 
