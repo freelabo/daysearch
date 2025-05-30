@@ -2,11 +2,18 @@ import { NextResponse } from 'next/server';
 import { searchFacilities } from '@/lib/elasticsearch';
 
 export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const { results } = await searchFacilities({});
-    return NextResponse.json({ results });
+    // URLからクエリパラメータを取得
+    const { searchParams } = new URL(request.url);
+    const query = Object.fromEntries(searchParams.entries());
+
+    // 検索実行
+    const { results, total } = await searchFacilities(query);
+
+    return NextResponse.json({ results, total });
   } catch (error) {
     console.error('Error fetching facilities:', error);
     return NextResponse.json(
