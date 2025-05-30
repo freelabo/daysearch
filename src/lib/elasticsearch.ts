@@ -1,14 +1,18 @@
 import { Client } from '@elastic/elasticsearch';
-import type { SearchResult, SearchQuery } from '@/types/elasticsearch';
+import type { SearchResult as ElasticSearchResult, SearchQuery as ElasticSearchQuery } from '@/types/elasticsearch';
 
-// Elasticsearchクライアントの初期化
-const client = new Client({
-  node: process.env.ELASTICSEARCH_URL || 'http://localhost:9200',
-  auth: {
-    username: process.env.ELASTICSEARCH_USERNAME || 'elastic',
-    password: process.env.ELASTICSEARCH_PASSWORD || 'changeme'
-  }
-});
+// Node.js環境でのみElasticsearchクライアントを初期化
+let client: Client | null = null;
+
+if (typeof window === 'undefined') {
+  client = new Client({
+    node: process.env.ELASTICSEARCH_URL || 'http://localhost:9200',
+    auth: {
+      username: process.env.ELASTICSEARCH_USERNAME || 'elastic',
+      password: process.env.ELASTICSEARCH_PASSWORD || 'changeme'
+    }
+  });
+}
 
 // 検索結果の型定義
 export interface SearchResult {
@@ -115,6 +119,10 @@ function buildSearchQuery(query: SearchQuery) {
 
 // 施設の検索
 export async function searchFacilities(query: SearchQuery) {
+  if (!client) {
+    throw new Error('Elasticsearch client is not initialized');
+  }
+
   try {
     const searchQuery = buildSearchQuery(query);
     const response = await client.search(searchQuery);
