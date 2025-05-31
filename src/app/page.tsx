@@ -28,10 +28,12 @@ export default function Home() {
       const params = new URLSearchParams();
       if (selectedPrefecture) params.append("prefecture", selectedPrefecture);
       if (selectedCity) params.append("city", selectedCity);
-      const res = await fetch(`/api/facilities?${params.toString()}`);
+      const res = await fetch(`/api/facilities?${params.toString()}`, {
+        cache: 'no-store'
+      });
       if (!res.ok) throw new Error("データ取得に失敗しました");
-      const data = await res.json();
-      setFacilities(data);
+      const { results = [], total = 0 } = await res.json();
+      setFacilities(results);
     } catch (e: any) {
       setError(e.message || "不明なエラーが発生しました");
       setFacilities([]);
@@ -112,31 +114,63 @@ export default function Home() {
           {!loading && !error && facilities.length === 0 && (
             <div className="text-center text-gray-500">該当する施設がありません</div>
           )}
-          {!loading && !error && facilities.map((facility, i) => (
-            <article key={facility.id || i} className="border rounded p-4 shadow-md mb-4 bg-white">
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between">
-                <div className="flex-1 min-w-0 md:basis-[61.8%]">
-                  <h2 className="text-lg font-semibold text-blue-600">
-                    <span>{facility.name}</span>
-                  </h2>
-                  <p className="text-sm text-gray-600">所在地：{facility.address}</p>
-                  <p className="text-sm text-gray-600">提供サービス：{facility.programs}</p>
-                  <p className="text-sm text-gray-600">対象：{facility.ageRange}</p>
-                  <p className="text-sm text-gray-600">特徴：{facility.features}</p>
-                  <p className="text-sm text-gray-600">説明：{facility.description}</p>
-                </div>
-                <div className="vertical-divider" style={{ minHeight: 120 }} />
-                <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:justify-end md:max-w-xs md:basis-[38.2%]">
-                  {/* ラベル表示例（labelsはJSON文字列） */}
-                  {facility.labels && Object.entries(JSON.parse(facility.labels)).map(([key, value]) => (
-                    <span
-                      key={key}
-                      className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white"
-                    >
-                      {key}:{value ? "○" : "×"}
-                    </span>
-                  ))}
-                </div>
+          {!loading && !error && facilities.map((facility) => (
+            <article key={facility.id} className="border rounded p-4 shadow-md mb-4 bg-white">
+              <h2 className="text-lg font-semibold text-blue-600 mb-2">
+                <a href={`/facility/${facility.id}`} className="hover:underline">
+                  {facility.name}
+                </a>
+              </h2>
+              <p className="text-sm text-gray-600 mb-2">
+                {facility.prefecture} {facility.city}
+              </p>
+              <p className="text-sm text-gray-600 mb-2">
+                対象年齢: {facility.ageRange}
+              </p>
+              <div className="flex flex-wrap gap-2 mb-2">
+                {facility.programs.map((program: string, index: number) => (
+                  <span
+                    key={index}
+                    className="bg-blue-100 text-blue-800 text-sm px-2 py-1 rounded"
+                  >
+                    {program}
+                  </span>
+                ))}
+              </div>
+              <p className="text-sm text-gray-600 line-clamp-2">
+                {facility.description}
+              </p>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {facility.labels?.dayService && (
+                  <span className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white">
+                    通所介護・デイサービス
+                  </span>
+                )}
+                {facility.labels?.noExperience && (
+                  <span className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white">
+                    未経験可
+                  </span>
+                )}
+                {facility.labels?.socialInsurance && (
+                  <span className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white">
+                    社会保険完備
+                  </span>
+                )}
+                {facility.labels?.carCommute && (
+                  <span className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white">
+                    車通勤可
+                  </span>
+                )}
+                {facility.labels?.bonus && (
+                  <span className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white">
+                    ボーナス・賞与あり
+                  </span>
+                )}
+                {facility.labels?.transportation && (
+                  <span className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white">
+                    交通費支給
+                  </span>
+                )}
               </div>
             </article>
           ))}

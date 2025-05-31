@@ -29,7 +29,7 @@ export interface SearchResult {
   labels?: Record<string, boolean>;
 }
 
-function buildSearchQuery(query: SearchQuery) {
+export function buildSearchQuery(query: SearchQuery) {
   const must: any[] = [];
   if (query.q) {
     must.push({

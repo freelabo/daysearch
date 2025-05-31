@@ -68,7 +68,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
             {/* 検索フォーム */}
             <div className="bg-gray-50 p-6 rounded-lg mb-8">
-              <SearchForm />
+              <SearchForm onSearch={() => {}} />
             </div>
           </section>
 
