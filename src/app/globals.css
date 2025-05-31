@@ -34,3 +34,8 @@ body {
     margin-right: 1rem;
   }
 }
+
+select,
+select option {
+  font-size: 16px !important; /* モバイルでの最小フォントサイズ指定 */
+}

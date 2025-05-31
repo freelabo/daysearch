@@ -1,12 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Footer from "./components/Footer";
+import CustomSelect from "./components/CustomSelect";
 
 export default function Home() {
   const [selectedPrefecture, setSelectedPrefecture] = useState("");
   const [selectedCity, setSelectedCity] = useState("");
+  const [facilities, setFacilities] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // 都道府県と市区町村の選択肢（サンプル）
+  const prefectures = ["東京都"];
+  const cities = [
+    "渋谷区", "新宿区", "港区", "千代田区", "世田谷区", "中野区", "目黒区", "品川区", "大田区", "江東区",
+    "墨田区", "江戸川区", "葛飾区", "足立区", "荒川区", "台東区", "文京区", "豊島区", "北区", "板橋区",
+    "練馬区", "杉並区"
+  ];
+
+  // 検索実行
+  const fetchFacilities = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const params = new URLSearchParams();
+      if (selectedPrefecture) params.append("prefecture", selectedPrefecture);
+      if (selectedCity) params.append("city", selectedCity);
+      const res = await fetch(`/api/facilities?${params.toString()}`);
+      if (!res.ok) throw new Error("データ取得に失敗しました");
+      const data = await res.json();
+      setFacilities(data);
+    } catch (e: any) {
+      setError(e.message || "不明なエラーが発生しました");
+      setFacilities([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 初回表示時に全件取得
+  useEffect(() => {
+    fetchFacilities();
+    // eslint-disable-next-line
+  }, []);
+
+  // 検索ボタン押下時
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchFacilities();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center">
@@ -28,56 +72,68 @@ export default function Home() {
           放課後等デイサービスは、発達に特性のある子どもたちを対象に、放課後や休日に療育や支援を行う福祉サービスです。<br />
           デイサーチでは、全国の事業所情報を地域・ニーズ別に検索できます。
         </p>
+        {/* 検索フォーム */}
+        <form onSubmit={handleSearch} className="flex flex-wrap gap-4 mt-6 items-end">
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">都道府県</label>
+            <CustomSelect
+              options={prefectures}
+              value={selectedPrefecture}
+              onChange={(value) => {
+                setSelectedPrefecture(value);
+                setSelectedCity("");
+              }}
+              placeholder="選択してください"
+              className="w-48"
+            />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-600 mb-1">市区町村</label>
+            <CustomSelect
+              options={cities}
+              value={selectedCity}
+              onChange={setSelectedCity}
+              placeholder="選択してください"
+              className="w-48"
+            />
+          </div>
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+            disabled={loading}
+          >
+            検索
+          </button>
+        </form>
+        {/* 検索結果 */}
         <div className="w-full max-w-screen-md mx-auto mt-6">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <article key={i} className="border rounded p-4 shadow-md mb-4 bg-white">
+          {loading && <div className="text-center text-gray-500">検索中...</div>}
+          {error && <div className="text-center text-red-500">{error}</div>}
+          {!loading && !error && facilities.length === 0 && (
+            <div className="text-center text-gray-500">該当する施設がありません</div>
+          )}
+          {!loading && !error && facilities.map((facility, i) => (
+            <article key={facility.id || i} className="border rounded p-4 shadow-md mb-4 bg-white">
               <div className="flex flex-col md:flex-row md:items-start md:justify-between">
                 <div className="flex-1 min-w-0 md:basis-[61.8%]">
                   <h2 className="text-lg font-semibold text-blue-600">
-                    <a
-                      href={`https://example.com/facility-${i + 1}`}
-                      className="hover:underline"
-                    >
-                      未来キッズ渋谷センター
-                    </a>
+                    <span>{facility.name}</span>
                   </h2>
-                  <p className="text-sm text-gray-600">所在地：東京都渋谷区渋谷1-1-1</p>
-                  <p className="text-sm text-gray-600">提供サービス：放課後等デイサービス</p>
-                  <p className="text-sm text-gray-600">対象児童：発達障害・自閉症スペクトラムの小中学生</p>
-                  <p className="text-sm text-gray-600">対応時間：平日 14:00〜18:00、土曜 10:00〜16:00</p>
-                  <p className="text-sm text-gray-600">料金：月額 2,000円〜（世帯収入に応じて変動）</p>
-                  <div className="mt-4 flex gap-4">
-                    <a
-                      href="tel:03-1234-5678"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-                    >
-                      電話する
-                    </a>
-                    <a
-                      href={`https://example.com/facility-${i + 1}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors"
-                    >
-                      公式ホームページ
-                    </a>
-                  </div>
+                  <p className="text-sm text-gray-600">所在地：{facility.address}</p>
+                  <p className="text-sm text-gray-600">提供サービス：{facility.programs}</p>
+                  <p className="text-sm text-gray-600">対象：{facility.ageRange}</p>
+                  <p className="text-sm text-gray-600">特徴：{facility.features}</p>
+                  <p className="text-sm text-gray-600">説明：{facility.description}</p>
                 </div>
                 <div className="vertical-divider" style={{ minHeight: 120 }} />
                 <div className="flex flex-wrap gap-2 mt-4 md:mt-0 md:justify-end md:max-w-xs md:basis-[38.2%]">
-                  {[
-                    '通所介護・デイサービス',
-                    '未経験可',
-                    '社会保険完備',
-                    '車通勤可',
-                    'ボーナス・賞与あり',
-                    '交通費支給',
-                  ].map((label) => (
+                  {/* ラベル表示例（labelsはJSON文字列） */}
+                  {facility.labels && Object.entries(JSON.parse(facility.labels)).map(([key, value]) => (
                     <span
-                      key={label}
+                      key={key}
                       className="border border-blue-300 text-blue-700 text-xs rounded-full px-3 py-1 bg-white"
                     >
-                      {label}
+                      {key}:{value ? "○" : "×"}
                     </span>
                   ))}
                 </div>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   title: "放課後等デイサービス検索 | DaySearch",
   description: "放課後等デイサービスの施設を簡単に検索できます。都道府県や市区町村から施設を探せます。",
   alternates: {
